@@ -16,7 +16,7 @@ fig = px.scatter(
 
 option = st.selectbox(
     'How would you like to be contacted?',
-    ('Email', 'Home phone', 'Mobile phone'))
+    ('streamlit', 'None'))
 
 tab1, tab2 = st.tabs([option, "Plotly native theme"])
 with tab1:
@@ -25,4 +25,6 @@ with tab1:
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 with tab2:
     # Use the native Plotly theme.
-    st.plotly_chart(fig, theme=None, use_container_width=True)
+    if option == "None":
+        st.plotly_chart(fig, theme=None, use_container_width=True)
+    st.plotly_chart(fig, theme=option, use_container_width=True)
