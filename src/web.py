@@ -14,9 +14,7 @@ fig = px.scatter(
     size_max=60,
 )
 
-option = st.selectbox(
-    'How would you like to be contacted?',
-    ('streamlit', 'None'))
+option = st.selectbox("How would you like to be contacted?", ("streamlit", "None"))
 
 tab1, tab2 = st.tabs([option, "Plotly native theme"])
 with tab1:
@@ -27,4 +25,6 @@ with tab2:
     # Use the native Plotly theme.
     if option == "None":
         st.plotly_chart(fig, theme=None, use_container_width=True)
-    st.plotly_chart(fig, theme=option, use_container_width=True)
+        # st.plotly_chart(fig, theme=option, use_container_width=True)
+    else:
+        st.write("no data available.")
