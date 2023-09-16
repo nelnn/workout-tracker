@@ -17,6 +17,9 @@ SPREADSHEET_ID = '1AHD9Yhyi72-SfFkYtP6STqCKblk9ipkFOOVPnaQbCQE'
 RANGE_NAME = 'Sheet1!A2:E'
 DATA_TO_PULL = '2023'
 
+PWD = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(PWD, "../data/")
+
 def gsheet_api_check(SCOPES):
     creds = None
     if os.path.exists('token.pickle'):
@@ -55,4 +58,4 @@ def pull_sheet_data(SCOPES,SPREADSHEET_ID, DATA_TO_PULL):
 if __name__ == '__main__':
     data = pull_sheet_data(SCOPES,SPREADSHEET_ID,DATA_TO_PULL)
     df = pd.DataFrame(data[1:], columns=data[0])
-    df.to_csv("data.csv")
+    df.to_csv(os.path.join(DATA_DIR, "data.csv"))
