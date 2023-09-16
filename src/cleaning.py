@@ -11,10 +11,12 @@ ffill_columns = ["Date", "Exercise", "Variation", "Weight"]
 
 def main():
     df = pd.read_csv(os.path.join(DATA_DIR, "data.csv"), index_col=0)
+    # remove rows with all nan values
+    df = df.dropna(how="all")
     # convert to upper case
-    df = df.map(lambda x: x.upper() if isinstance(x, str) else x)
+    df = df.applymap(lambda x: x.upper() if isinstance(x, str) else x)
     # Remove trailing spaces from all string values
-    df = df.map(lambda x: x.rstrip() if isinstance(x, str) else x)
+    df = df.applymap(lambda x: x.rstrip() if isinstance(x, str) else x)
     # fill 0 weight for selected Exercises
     # I was too lazy to fill in 0 when working out
     df.loc[(~df["Exercise"].isnull()) & (df["Weight"].isnull()), ["Weight"]] = 0
