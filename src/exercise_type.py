@@ -20,6 +20,10 @@ def pick_df(df: pd.DataFrame, exercise: str, variation: str) -> pd.DataFrame:
     """
     # convert date to datetime
     df["Date"] = pd.to_datetime(df["Date"])
+    # count sets
+    df["Set"] = df.groupby(['Date', 'Exercise', 'Variation']).cumcount() + 1
+    df.reset_index(drop=True, inplace=True)
+    df["Set"] = df["Set"].apply(str)
     # select exercises with assistant bands
     assistant_band_exercises = df["Weight"].str.isalpha()
     assistant_band_exercises = df[assistant_band_exercises]["Exercise"].unique()

@@ -108,21 +108,18 @@ class Plot:
         fig.show()
 
     def volume_breakdown(self) -> None:
-        fig = px.bar(
-            self.df,
-            x="Date",
-            y="Weight",
-            color="Count"
+        df_groupby_date = (
+            self.df.assign(col=self.df.Weight * self.df.Count)
+            .groupby("Date", as_index=False)
+            .col.sum()
         )
+        fig = px.bar(self.df, x="Date", y="Weight", custom_data=["Count"], color="Set")
+        hovertemplate = (
+            "Date: %{x}<br>"
+            + "Weight: %{y} kg<br>"
+            + "Count: %{customdata[0]}"
+            + "<extra></extra>"
+        )
+
+        fig.update_traces(hovertemplate=hovertemplate)
         fig.show()
-
-def main():
-    df = pd.read_csv("data/clean.csv")
-    df = pick_df(df, "BENCH PRESS", "/")
-
-    plot = Plot(df)
-    plot.personal_record()
-
-
-if __name__ == "__main__":
-    main()
