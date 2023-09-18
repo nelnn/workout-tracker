@@ -77,7 +77,9 @@ class Plot:
         fig.update_traces(
             customdata=pd.DataFrame(counts_arr), hovertemplate=hovertemplate
         )
-        fig.show()
+        fig.update_layout(hovermode="x unified")
+
+        return fig
 
     def volume(self) -> None:
         """
@@ -108,18 +110,18 @@ class Plot:
         fig.show()
 
     def volume_breakdown(self) -> None:
-        df_groupby_date = (
-            self.df.assign(col=self.df.Weight * self.df.Count)
-            .groupby("Date", as_index=False)
-            .col.sum()
+        self.df["Volume"] = self.df["Weight"] * self.df["Count"]
+
+        fig = px.bar(
+            self.df, x="Date", y="Volume", custom_data=["Weight", "Count"], color="Set"
         )
-        fig = px.bar(self.df, x="Date", y="Weight", custom_data=["Count"], color="Set")
         hovertemplate = (
             "Date: %{x}<br>"
-            + "Weight: %{y} kg<br>"
-            + "Count: %{customdata[0]}"
+            + "Volume: %{y} <br>"
+            + "Weight: %{customdata[0]} kg<br>"
+            + "Count: %{customdata[1]}"
             + "<extra></extra>"
         )
 
         fig.update_traces(hovertemplate=hovertemplate)
-        fig.show()
+        return fig

@@ -1,30 +1,83 @@
+import pandas as pd
 import plotly.express as px
 import streamlit as st
+import os
 
-df = px.data.gapminder()
+from body_weight import BodyWeight
+from processing_raw import Processing
+from exercise_type import pick_df
+from plots import Plot
 
-fig = px.scatter(
-    df.query("year==2007"),
-    x="gdpPercap",
-    y="lifeExp",
-    size="pop",
-    color="continent",
-    hover_name="country",
-    log_x=True,
-    size_max=60,
+
+PWD = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(PWD, "../data/data.csv")
+WEIGHT_DIR = os.path.join(PWD, "../data/weight.csv")
+
+df_raw = pd.read_csv(DATA_DIR, index_col=0)
+processing = Processing(df_raw=df_raw)
+
+df_raw_filled = processing.get_filled_df()
+st.header("Gym Tracker")
+st.write(
+    "Hi! My name is Nelson. \
+    This is my workout tracker where I record my progess in Weightlifting and Calisthenics!"
 )
 
-option = st.selectbox("How would you like to be contacted?", ("streamlit", "None"))
+st.subheader("Performance")
+st.write("Select the exercise and variation to generate the plots.")
 
-tab1, tab2 = st.tabs([option, "Plotly native theme"])
-with tab1:
-    # Use the Streamlit theme.
-    # This is the default. So you can also omit the theme argument.
-    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
-with tab2:
-    # Use the native Plotly theme.
-    if option == "None":
-        st.plotly_chart(fig, theme=None, use_container_width=True)
-        # st.plotly_chart(fig, theme=option, use_container_width=True)
-    else:
-        st.write("no data available.")
+# Custom Plots
+container_custom = st.container()
+with container_custom:
+    col11, col12 = st.columns(2)
+    with col11:
+        exercises = sorted(df_raw_filled["Exercise"].unique())
+        default_exercise_option = exercises.index("BENCH PRESS")
+        exercise_option = st.selectbox(
+            "Exercise", tuple(exercises), index=default_exercise_option
+        )
+    with col12:
+        variations = sorted(
+            df_raw_filled[df_raw_filled["Exercise"] == exercise_option][
+                "Variation"
+            ].unique()
+        )
+        variations_option = st.selectbox("Variation", tuple(variations))
+
+    df = processing.get_exercise_variation_df(
+        exercise=exercise_option, variation=variations_option
+    )
+    plots = Plot(df)
+
+    tab1, tab2, tab3 = st.tabs(["Volume", "PR", "Additional Information"])
+
+    with tab1:
+        fig_volume = plots.volume_breakdown()
+        st.plotly_chart(fig_volume, use_container_width=True)
+    with tab2:
+        fig_pr = plots.personal_record()
+        st.plotly_chart(fig_pr, use_container_width=True)
+    with tab3:
+        st.write("**Resistance Band**")
+        st.markdown(
+            "- I use resistance bands for some Calisthenics exercises \
+            and I have 4 bands of different thickness. Since I cannot quantify the strength of \
+            the bands with definite values, I assign the lighest band 0.8kg, \
+            second lightest 0.6kg, third 0.2kg, and the heaviest 0.1kg."
+        )
+        st.write("**Body Weight**")
+        st.markdown(
+            "- If no weight is added to the exercise we set the weight \
+            to $1$ in order to plot the total volume."
+        )
+        st.write("**Count**")
+        st.markdown("- The 'Count' variable specifies the number of reps or\
+                     the number of seconds performed for the exercise.")
+# Body Weight
+# st.subheader("Body Weight")
+container_bw = st.container()
+with container_bw:
+    df_bw = pd.read_csv(WEIGHT_DIR, index_col=0)
+    bw = BodyWeight(df_bw)
+    fig_bw = bw.body_weight_trend()
+    st.plotly_chart(fig_bw, use_container_width=True)
