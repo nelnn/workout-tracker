@@ -3,15 +3,19 @@ import plotly.express as px
 import streamlit as st
 import os
 
-from body_weight import BodyWeight
-from processing_raw import Processing
-from exercise_type import pick_df
-from plots import Plot
+from src.body_weight import BodyWeight
+from src.processing_raw import Processing
+from src.plots import Plot
 
 
 PWD = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(PWD, "../data/data.csv")
-WEIGHT_DIR = os.path.join(PWD, "../data/weight.csv")
+DATA_DIR = os.path.join(PWD, "data/data.csv")
+print("")
+print("")
+print(DATA_DIR)
+print("")
+print("")
+WEIGHT_DIR = os.path.join(PWD, "data/weight.csv")
 
 df_raw = pd.read_csv(DATA_DIR, index_col=0)
 processing = Processing(df_raw=df_raw)

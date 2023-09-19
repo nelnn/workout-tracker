@@ -7,8 +7,6 @@ import numpy as np
 import os
 import seaborn as sns
 
-from exercise_type import pick_df
-
 
 class Plot:
     def __init__(self, df: pd.DataFrame):
