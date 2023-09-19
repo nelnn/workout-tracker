@@ -1,9 +1,7 @@
-import datetime
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-from typing import Optional
 
 
 class BodyWeight:

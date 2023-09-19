@@ -1,5 +1,4 @@
 import pandas as pd
-import plotly.express as px
 import streamlit as st
 import os
 
@@ -10,10 +9,6 @@ from src.plots import Plot
 
 PWD = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(PWD, "data/data.csv")
-print("")
-print("")
-print(DATA_DIR)
-print("")
 print("")
 WEIGHT_DIR = os.path.join(PWD, "data/weight.csv")
 

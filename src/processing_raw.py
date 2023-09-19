@@ -1,8 +1,6 @@
 import pandas as pd
 import os
 
-from typing import List
-
 PWD = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(PWD, "../data/data.csv")
 
