@@ -112,13 +112,22 @@ class Plot:
     def volume_breakdown(self) -> None:
         self.df["Volume"] = self.df["Weight"] * self.df["Count"]
 
+        self.df["Weight_hover"] = self.df["Weight"].apply(str) + " kg"
+        bands_values = ["1.0 kg", "0.1 kg", "0.2 kg", "0.6 kg", "0.8 kg"]
+        bands_str = ["Body Weight", "Purple", "Black", "Green", "Orange"]
+        for i, j in zip(bands_values, bands_str):
+            self.df["Weight_hover"] = np.where(
+                self.df["Weight_hover"] == i, j, self.df["Weight_hover"]
+            )
+
         fig = px.bar(
-            self.df, x="Date", y="Volume", custom_data=["Weight", "Count"], color="Set"
+            self.df, x="Date", y="Volume", custom_data=["Weight_hover", "Count"], color="Set"
         )
+
         hovertemplate = (
             "Date: %{x}<br>"
             + "Volume: %{y} <br>"
-            + "Weight: %{customdata[0]} kg<br>"
+            + "Weight: %{customdata[0]}<br>"
             + "Count: %{customdata[1]}"
             + "<extra></extra>"
         )
