@@ -3,7 +3,11 @@ name: run main.py
 on:
   # schedule:
   #   - cron: '0 4 * * *' # At 0400 Everyday
-  workflow_dispatch
+  push:
+    branches:
+      - "auth"
+      - "main"
+  workflow_dispatch:
   
 
 jobs:
