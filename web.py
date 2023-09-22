@@ -5,14 +5,12 @@ import os
 from src.body_weight import BodyWeight
 from src.processing_raw import Processing
 from src.plots import Plot
+from src.get_data_from_gsheets import get_raw_data
 
+import src.updated_timestamp
 
-PWD = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(PWD, "data/data.csv")
-print("")
-WEIGHT_DIR = os.path.join(PWD, "data/weight.csv")
+df_raw, df_bw = get_raw_data()
 
-df_raw = pd.read_csv(DATA_DIR, index_col=0)
 processing = Processing(df_raw=df_raw)
 
 df_raw_filled = processing.get_filled_df()
@@ -70,13 +68,15 @@ with container_custom:
             to $1$ in order to plot the total volume."
         )
         st.write("**Count**")
-        st.markdown("- The 'Count' variable specifies the number of reps or\
-                     the number of seconds performed for the exercise.")
-# Body Weight
-# st.subheader("Body Weight")
+        st.markdown(
+            "- The 'Count' variable specifies the number of reps or\
+                     the number of seconds performed for the exercise."
+        )
+
+
 container_bw = st.container()
 with container_bw:
-    df_bw = pd.read_csv(WEIGHT_DIR, index_col=0)
+    # df_bw = pd.read_csv(WEIGHT_DIR, index_col=0)
     bw = BodyWeight(df_bw)
     fig_bw = bw.body_weight_trend()
     st.plotly_chart(fig_bw, use_container_width=True)
