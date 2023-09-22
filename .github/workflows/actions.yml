@@ -24,7 +24,7 @@ jobs:
           python-version: '3.11' # install the python version needed
       
       - name: create-json
-      - uses: jsdaniell/create-json@v1.2.2
+        uses: jsdaniell/create-json@v1.2.2
         with:
           name: "creadentials.json"
           json: ${{ secrets.CREDENTIALS_JSON }}
