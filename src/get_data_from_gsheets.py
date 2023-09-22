@@ -5,7 +5,7 @@ import pandas as pd
 import gspread
 
 PWD = os.path.dirname(os.path.abspath(__file__))
-TIMESTAMP_DIR = os.path.join(PWD, "update_timestamp.py")
+TIMESTAMP_DIR = os.path.join(PWD, "updated_timestamp.py")
 
 
 def get_raw_data() -> list[pd.DataFrame, pd.DataFrame]:
