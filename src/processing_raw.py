@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import os
 
 PWD = os.path.dirname(os.path.abspath(__file__))
@@ -57,9 +58,9 @@ class Processing:
         # remove rows with all nan values
         df = self.df_raw.dropna(how="all")
         # convert to upper case
-        df = df.applymap(lambda x: x.upper() if isinstance(x, str) else x)
+        df = df.map(lambda x: x.upper() if isinstance(x, str) else x)
         # Remove trailing spaces from all string values
-        df = df.applymap(lambda x: x.rstrip() if isinstance(x, str) else x)
+        df = df.map(lambda x: x.rstrip() if isinstance(x, str) else x)
         # fill 0 weight for selected Exercises
         # I was too lazy to fill in 0 when working out
         # <<Note>> This "Weight" column type is object b.c. the pre-filled values are strings.
@@ -68,5 +69,4 @@ class Processing:
         ffill_columns = ["Date", "Exercise", "Variation", "Weight"]
         [df[col].ffill(inplace=True) for col in ffill_columns]
         df.loc[df["Weight"]=="0", "Weight"] = "1"
-
         return df

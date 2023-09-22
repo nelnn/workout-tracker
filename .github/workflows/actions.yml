@@ -1,8 +1,9 @@
-name: run main.py
+
+name: Update Data
 
 on:
-  # schedule:
-  #   - cron: '0 4 * * *' # At 0400 Everyday
+  schedule:
+    - cron: '0 4 * * *' # At 0400 Everyday
   workflow_dispatch:
   
 
@@ -31,17 +32,17 @@ jobs:
           pip install -r requirements.txt
           
       - name: execute py script # run main.py
-        run: python src/main.py
+        run: python get_data_from_gsheets.py
           
       - name: commit files
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "fetch data from GDrive" --allow-empty)
+          git diff-index --quiet HEAD || (git commit -a -m "fetch data and reload web" --allow-empty)
           
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main 
+          branch: main
