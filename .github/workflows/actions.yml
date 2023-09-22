@@ -1,36 +1,17 @@
-name: run main.py
+
+name: Update Data
 
 on:
   schedule:
-    # - cron: '0 4 * * *' # At 0400 Everyday
-    - cron: '*/10 * * * *' # At 0400 Everyday
+    - cron: '0 4 * * *' # At 0400 Everyday
+  workflow_dispatch:
+  
 
 jobs:
   job_id:
-    # ...
-
-    # Add "id-token" with the intended permissions.
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
-    steps:
-    # actions/checkout MUST come before auth
-    - uses: 'actions/checkout@v3'
-
-    - id: 'auth'
-      name: 'Authenticate to Google Cloud'
-      uses: 'google-github-actions/auth@v1'
-      with:
-        workload_identity_provider: 'projects/404395342859/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-        service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
-
-    # ... further steps are automatically authenticated
-
-  build:
     runs-on: ubuntu-latest
-    steps:
 
+    steps:
       - name: checkout repo content
         uses: actions/checkout@v3 # checkout the repository content to github runner
 
@@ -38,24 +19,30 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.11' # install the python version needed
-          
+      
+      - name: create-json
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: "credentials.json"
+          json: ${{ secrets.CREDENTIALS_JSON }}
+
       - name: install python packages
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           
       - name: execute py script # run main.py
-        run: python src/main.py
+        run: python get_data_from_gsheets.py
           
       - name: commit files
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "fetch data from GDrive" --allow-empty)
+          git diff-index --quiet HEAD || (git commit -a -m "fetch data and reload web" --allow-empty)
           
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main 
+          branch: main
