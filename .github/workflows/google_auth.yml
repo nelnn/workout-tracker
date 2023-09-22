@@ -1,9 +1,6 @@
 name: fetch data from Google Drive
 
 on:
-  schedule:
-    # - cron: '0 4 * * *' # At 0400 Everyday
-    - cron: '*/10 * * * *' # At 0400 Everyday
   push:
     branches:
       - "auth"
