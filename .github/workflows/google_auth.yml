@@ -1,10 +1,6 @@
 name: Google Authentication
 
 on:
-  push:
-    branches:
-      - "auth"
-      - "main"
   workflow_dispatch:
 
 jobs:
