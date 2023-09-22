@@ -8,33 +8,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  job_id:
-    # ...
-
-    # Add "id-token" with the intended permissions.
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
-    steps:
-    # actions/checkout MUST come before auth
-    - uses: 'actions/checkout@v3'
-
-    - id: 'auth'
-      name: 'Authenticate to Google Cloud'
-      uses: 'google-github-actions/auth@v1'
-      with:
-        workload_identity_provider: 'projects/404395342859/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-        service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
-
-    # ... further steps are automatically authenticated
-
   build:
     runs-on: ubuntu-latest
     steps:
-
       - name: checkout repo content
         uses: actions/checkout@v3 # checkout the repository content to github runner
+
+      - name: Authenticate to Google Cloud
+      - uses: google-github-actions/auth@v1.1.1
 
       - name: setup python
         uses: actions/setup-python@v4
