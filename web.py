@@ -5,11 +5,14 @@ import os
 from src.body_weight import BodyWeight
 from src.processing_raw import Processing
 from src.plots import Plot
-from src.get_data_from_gsheets import get_raw_data
+from src.get_data_from_gsheets import get_raw_data, load_data
 
 import src.updated_timestamp
 
-df_raw, df_bw = get_raw_data()
+# df_raw, df_bw = get_raw_data()
+
+df_raw = load_data()
+df_bw = load_data(sheet_name="Weight")
 
 processing = Processing(df_raw=df_raw)
 
@@ -17,8 +20,7 @@ df_raw_filled = processing.get_filled_df()
 st.header("Gym Tracker")
 st.write(
     "Hi! My name is Nelson. \
-    This is my workout tracker where I record my progess in Weightlifting and Calisthenics! \
-    Testing"
+    This is my workout tracker where I record my progess in Weightlifting and Calisthenics!"
 )
 
 st.subheader("Performance")
