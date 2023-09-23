@@ -18,7 +18,6 @@ processing = Processing(df_raw=df_raw)
 
 df_raw_filled = processing.get_filled_df()
 st.header("Gym Tracker")
-st.write("testing")
 st.write(
     "Hi! My name is Nelson. \
     This is my workout tracker where I record my progess in Weightlifting and Calisthenics!"
