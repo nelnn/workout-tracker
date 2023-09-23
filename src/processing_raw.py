@@ -68,5 +68,5 @@ class Processing:
         # forward fill
         ffill_columns = ["Date", "Exercise", "Variation", "Weight"]
         [df[col].ffill(inplace=True) for col in ffill_columns]
-        df.loc[df["Weight"]=="0", "Weight"] = "1"
+        df.loc[(df["Weight"]=="0") | (df["Weight"]==0), "Weight"] = "1"
         return df

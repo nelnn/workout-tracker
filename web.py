@@ -1,3 +1,4 @@
+from pathlib import Path
 import pandas as pd
 import streamlit as st
 import os
@@ -9,6 +10,9 @@ from src.get_data_from_gsheets import get_raw_data, load_data
 
 import src.updated_timestamp
 
+PWD = os.path.dirname(os.path.abspath(__file__))
+MD_DIR = os.path.join(PWD, "md/")
+
 # df_raw, df_bw = get_raw_data()
 
 df_raw = load_data()
@@ -17,13 +21,17 @@ df_bw = load_data(sheet_name="Weight")
 processing = Processing(df_raw=df_raw)
 
 df_raw_filled = processing.get_filled_df()
-st.header("Gym Tracker")
-st.header("Gym Tracker")
-st.header("Gym Tracker")
-st.write(
-    "Hi! My name is Nelson. \
-    This is my workout tracker where I record my progess in Weightlifting and Calisthenics!"
-)
+
+
+@st.cache_data(ttl=600)
+def read_markdown_file(markdown_file):
+    dir = os.path.join(MD_DIR, markdown_file)
+    return Path(dir).read_text()
+
+
+intro_markdown = read_markdown_file("introduction.md")
+st.markdown(intro_markdown, unsafe_allow_html=True)
+
 
 st.subheader("Performance")
 st.write("Select the exercise and variation to generate the plots.")
@@ -60,23 +68,8 @@ with container_custom:
         fig_pr = plots.personal_record()
         st.plotly_chart(fig_pr, use_container_width=True)
     with tab3:
-        st.write("**Resistance Band**")
-        st.markdown(
-            "- I use resistance bands for some Calisthenics exercises \
-            and I have 4 bands of different thickness. Since I cannot quantify the strength of \
-            the bands with definite values, I assign the lighest band 0.8kg, \
-            second lightest 0.6kg, third 0.2kg, and the heaviest 0.1kg."
-        )
-        st.write("**Body Weight**")
-        st.markdown(
-            "- If no weight is added to the exercise we set the weight \
-            to $1$ in order to plot the total volume."
-        )
-        st.write("**Count**")
-        st.markdown(
-            "- The 'Count' variable specifies the number of reps or\
-                     the number of seconds performed for the exercise."
-        )
+        plots_info_md = read_markdown_file("plot_details.md")
+        st.markdown(plots_info_md, unsafe_allow_html=True)
 
 
 container_bw = st.container()
