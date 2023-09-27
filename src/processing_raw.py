@@ -14,12 +14,6 @@ class Processing:
 
     def _general_processing(self) -> pd.DataFrame:
         df = self.df_raw_filled
-        # convert str to datetime
-        df["Date"] = pd.to_datetime(df["Date"], dayfirst=True, errors="coerce")
-        # count sets
-        df["Set"] = df.groupby(["Date", "Exercise", "Variation"]).cumcount() + 1
-        df.reset_index(drop=True, inplace=True)
-        df["Set"] = df["Set"].apply(str)
 
         # select exercises with assistant bands
         assistant_band_exercises = df["Weight"].apply(str).str.isalpha()
@@ -64,9 +58,16 @@ class Processing:
         # fill 0 weight for selected Exercises
         # I was too lazy to fill in 0 when working out
         # <<Note>> This "Weight" column type is object b.c. the pre-filled values are strings.
-        df.loc[(~df["Exercise"].isnull()) & (df["Weight"].isnull()), ["Weight"]] = "0"
+        df.loc[(~df["Exercise"].isnull()) & (df["Weight"].isnull()), ["Weight"]] = 0
         # forward fill
         ffill_columns = ["Date", "Exercise", "Variation", "Weight"]
         [df[col].ffill(inplace=True) for col in ffill_columns]
-        df.loc[(df["Weight"]=="0") | (df["Weight"]==0), "Weight"] = "1"
+        df.loc[df["Weight"]==0, "Weight"] = "1"
+
+        # convert str to datetime
+        df["Date"] = pd.to_datetime(df["Date"], dayfirst=True, errors="coerce")
+        # count sets
+        df["Set"] = df.groupby(["Date", "Exercise", "Variation"]).cumcount() + 1
+        df.reset_index(drop=True, inplace=True)
+        df["Set"] = df["Set"].apply(str)
         return df
