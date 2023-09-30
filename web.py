@@ -36,7 +36,7 @@ intro_markdown = read_markdown_file("introduction.md")
 st.markdown(intro_markdown, unsafe_allow_html=True)
 
 
-st.subheader("Performance")
+st.subheader("Charts")
 st.write("Select the exercise and variation to generate the plots.")
 
 # Custom Plots
@@ -83,7 +83,7 @@ with container_bw:
 
 container_df = st.container()
 with container_df:
-    col21, col22 = st.columns([0.2,0.8])
+    col21, col22 = st.columns([0.2, 0.8])
     with col21:
         input_date = st.date_input("Date", df_raw_filled["Date"].max())
         df_day = get_daily_workout(df_raw_filled, input_date)
