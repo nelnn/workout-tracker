@@ -35,6 +35,8 @@ def read_markdown_file(markdown_file):
 intro_markdown = read_markdown_file("introduction.md")
 st.markdown(intro_markdown, unsafe_allow_html=True)
 
+logs_markdown = read_markdown_file("dairy.md")
+st.markdown(logs_markdown, unsafe_allow_html=True)
 
 st.subheader("Charts")
 st.write("Select the exercise and variation to generate the plots.")
