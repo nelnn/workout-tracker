@@ -38,13 +38,15 @@ st.markdown(intro_markdown, unsafe_allow_html=True)
 logs_markdown = read_markdown_file("dairy.md")
 st.markdown(logs_markdown, unsafe_allow_html=True)
 
-st.subheader("Charts")
-st.write("Select the exercise and variation to generate the plots.")
 
 # Custom Plots
 container_custom = st.container()
 with container_custom:
-    col11, col12 = st.columns(2)
+    st.subheader("Analytics")
+    st.write("Display the total volume of an exercise. Volume is defined as either \
+             weight*reps or *weight x seconds* depending on the specific exercise.")
+    st.write("Select the exercise and variation to generate the plots.")
+    col11, col12, col13 = st.columns(3)
     with col11:
         exercises = sorted(df_raw_filled["Exercise"].unique())
         default_exercise_option = exercises.index("BENCH PRESS")
@@ -58,7 +60,17 @@ with container_custom:
             ].unique()
         )
         variations_option = st.selectbox("Variation", tuple(variations))
-
+    with col13:
+        date_range = [
+            "Last 1 month",
+            "Last 3 months",
+            "Last 6 months",
+            "Last 12 months",
+        ]
+        default_date_range_option = date_range.index("Last 3 months")
+        date_range_option = st.selectbox(
+            "Period", tuple(date_range), index=default_date_range_option
+        )
     df = processing.get_exercise_variation_df(
         exercise=exercise_option, variation=variations_option
     )
@@ -67,7 +79,7 @@ with container_custom:
     tab1, tab2, tab3 = st.tabs(["Volume", "PR", "Additional Information"])
 
     with tab1:
-        fig_volume = plots.volume_breakdown()
+        fig_volume = plots.volume_breakdown(date_range_option)
         st.plotly_chart(fig_volume, use_container_width=True)
     with tab2:
         fig_pr = plots.personal_record()
@@ -79,12 +91,18 @@ with container_custom:
 
 container_bw = st.container()
 with container_bw:
+    st.subheader("Body Weight")
     bw = BodyWeight(df_bw)
     fig_bw = bw.body_weight_trend()
     st.plotly_chart(fig_bw, use_container_width=True)
 
 container_df = st.container()
 with container_df:
+    st.subheader("Session")
+    st.write(
+        "Display the workout record of a given date. \
+            Default shows the record of the latest session."
+    )
     col21, col22 = st.columns([0.2, 0.8])
     with col21:
         input_date = st.date_input("Date", df_raw_filled["Date"].max())

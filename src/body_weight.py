@@ -16,8 +16,9 @@ class BodyWeight:
         )
 
     def body_weight_trend(self) -> px.line:
-        fig = px.line(self.df, x="Date", y="kg",title="Body Weight")
+        fig = px.line(self.df, x="Date", y="kg")
         fig.update_traces(mode="markers+lines", hovertemplate=None, line_color="#39e6ba")
         fig.update_layout(hovermode="x unified")
         # fig.update_xaxes(range=[self.df["Date"][0], self.df["Date"][5]])
+        fig.update_layout(dragmode='pan')
         return fig

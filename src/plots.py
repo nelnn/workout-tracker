@@ -13,12 +13,6 @@ class Plot:
         self.exercise = self.df["Exercise"].values[0]
         self.variation = self.df["Variation"].values[0]
 
-    # def _get_exercise_variation_df(self):
-    #     return self.df.loc[
-    #         (self.df["Exercise"] == self.exercise)
-    #         & (self.df["Variation"] == self.variation)
-    #     ]
-
     def personal_record(self) -> None:
         """
         Plot the Personal Record (PR) of a given exercise and variation across time.
@@ -75,35 +69,7 @@ class Plot:
 
         return fig
 
-    def volume(self) -> None:
-        """
-        Plot the total volume of the exercise across time.
-        """
-
-        df_groupby_date = (
-            self.df.assign(col=self.df.Weight * self.df.Count)
-            .groupby("Date", as_index=False)
-            .col.sum()
-        )
-
-        fig = go.Figure(
-            [
-                go.Scatter(
-                    x=df_groupby_date.Date,
-                    y=df_groupby_date.col,
-                )
-            ]
-        )
-
-        variation = "" if self.variation == "/" else self.variation
-        fig.update_layout(
-            xaxis_title="Date",
-            yaxis_title="kg",
-            title=f"{self.exercise} {variation} PR",
-        )
-        fig.show()
-
-    def volume_breakdown(self) -> None:
+    def volume_breakdown(self, period: str) -> None:
         self.df["Volume"] = self.df["Weight"] * self.df["Count"]
 
         self.df["Weight_hover"] = self.df["Weight"].apply(str) + " kg"
@@ -115,7 +81,11 @@ class Plot:
             )
 
         fig = px.bar(
-            self.df, x="Date", y="Volume", custom_data=["Weight_hover", "Count"], color="Set"
+            self.df,
+            x="Date",
+            y="Volume",
+            custom_data=["Weight_hover", "Count"],
+            color="Set",
         )
 
         hovertemplate = (
@@ -127,4 +97,20 @@ class Plot:
         )
 
         fig.update_traces(hovertemplate=hovertemplate)
+        start_date, end_date = self._get_period(period)
+        fig.update_layout(xaxis_range=[start_date, end_date], dragmode='pan')
         return fig
+
+    def _get_period(self, period: str) -> [str, str]:
+        dic_date_range = {
+            "Last 1 month": 30,
+            "Last 3 months": 90,
+            "Last 6 months": 180,
+            "Last 12 months": 365,
+        }
+
+        end_date = self.df["Date"].max()
+        start_date = end_date - pd.to_timedelta(dic_date_range[period], unit="d")
+        print(dic_date_range[period])
+        print(start_date)
+        return start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d")
