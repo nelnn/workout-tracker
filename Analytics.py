@@ -8,12 +8,10 @@ from src.body_weight import BodyWeight
 from src.processing_raw import Processing
 from src.plots import Plot
 from src.get_data import get_data_from_gsheets, get_daily_workout
-import src.updated_timestamp
 
 st.set_page_config(
     page_title="Gym Tracker",
-    page_icon=":man-lifting-weights:",
-    layout="wide",
+    page_icon=":man-lifting-weights:"
 )
 
 PWD = os.path.dirname(os.path.abspath(__file__))
@@ -31,12 +29,6 @@ def read_markdown_file(markdown_file):
     dir = os.path.join(MD_DIR, markdown_file)
     return Path(dir).read_text()
 
-
-intro_markdown = read_markdown_file("introduction.md")
-st.markdown(intro_markdown, unsafe_allow_html=True)
-
-logs_markdown = read_markdown_file("dairy.md")
-st.markdown(logs_markdown, unsafe_allow_html=True)
 
 
 # Custom Plots
