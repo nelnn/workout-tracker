@@ -74,12 +74,3 @@ def get_daily_workout(df: pd.DataFrame, date: datetime.date):
         index="Set", columns="Ex_Var", values="Value", aggfunc="sum", fill_value="N/A"
     )
     return pivot_df
-
-
-def update_timestamp():
-    with open(TIMESTAMP_DIR, "w") as fp:
-        fp.write(f'"Updated {str(datetime.datetime.now(datetime.timezone.utc))}"\n')
-
-
-if __name__ == "__main__":
-    update_timestamp()
