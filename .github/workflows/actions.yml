@@ -26,10 +26,10 @@ jobs:
           name: "credentials.json"
           json: ${{ secrets.CREDENTIALS_JSON }}
 
-      - name: install python packages
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      # - name: install python packages
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install -r requirements.txt
           
       - name: execute py script # run main.py
         run: python src/get_data.py
