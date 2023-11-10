@@ -3,7 +3,7 @@ name: Update Data
 
 on:
   schedule:
-    - cron: '0 4 * * *' # At 0400 Everyday
+    - cron: '0 0 * * 0' # At 0400 Everyday
   workflow_dispatch:
   
 
