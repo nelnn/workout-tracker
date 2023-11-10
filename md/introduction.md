@@ -1,1 +1,2 @@
-#### :wave: Welcome to my workout page! This is an application showcasing my progress in resistance training and calisthenics.
+## :wave: Welcome to my workout tracker! 
+This application records my progress in the gym and calisthenics.

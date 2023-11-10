@@ -30,13 +30,15 @@ def read_markdown_file(markdown_file):
     return Path(dir).read_text()
 
 
+intro_markdown = read_markdown_file("introduction.md")
+st.markdown(intro_markdown, unsafe_allow_html=True)
 
 # Custom Plots
 container_custom = st.container()
 with container_custom:
     st.subheader("Analytics")
     st.write("Display the total volume of an exercise. Volume is defined as either \
-             weight*reps or *weight x seconds* depending on the specific exercise.")
+             weight\*reps or weight\*seconds depending on the specific exercise.")
     st.write("Select the exercise and variation to generate the plots.")
     col11, col12, col13 = st.columns(3)
     with col11:
